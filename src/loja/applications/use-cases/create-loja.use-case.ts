@@ -4,13 +4,14 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 
+import { IUseCase } from '@shared/application/use-case.interface';
 import { Descricao } from '@shared/domain/value-objects/descricao.vo';
 
 import { Loja } from '../../domain/entities/loja.entity';
 import { ISavableLoja } from '../../domain/repositories/loja.repository';
 import { CreateLojaDTO } from '../dtos/create-loja.dto';
 
-export class CreateLojaUseCase {
+export class CreateLojaUseCase implements IUseCase<CreateLojaDTO, Loja> {
   constructor(private readonly repository: ISavableLoja) {}
 
   async execute(input: CreateLojaDTO): Promise<Loja> {
