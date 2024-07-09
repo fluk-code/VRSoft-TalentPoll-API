@@ -27,6 +27,8 @@ module.exports = {
     'typeorm/entities',
     'typeorm/migrations',
     '.module.ts',
+    '.provider.ts',
+    '.interface.ts',
   ],
   rootDir: 'src',
   coverageProvider: 'v8',
