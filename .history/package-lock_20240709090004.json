@@ -1,11 +1,11 @@
 {
-  "name": "VRSoft-TalentPool-API",
+  "name": "NOME_DO_PROJETO",
   "version": "0.0.0",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
-      "name": "VRSoft-TalentPool-API",
+      "name": "NOME_DO_PROJETO",
       "version": "0.0.0",
       "license": "UNLICENSED",
       "dependencies": {

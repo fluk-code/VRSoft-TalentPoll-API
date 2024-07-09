@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug NOME_DO_PROJETO",
+      "name": "Debug VRSoft-TalentPool-API",
       "type": "node",
       "request": "attach",
       "port": 9229,

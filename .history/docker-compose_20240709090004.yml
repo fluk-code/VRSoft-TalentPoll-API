@@ -3,7 +3,7 @@ version: '3'
 services:
   vrsoft-talentpool-api:
     build: .
-    container_name: VRSoft-TalentPool-API
+    container_name: NOME_DO_PROJETO
     entrypoint: ./.docker/entrypoint.sh
     volumes:
       - .:/home/node/app
