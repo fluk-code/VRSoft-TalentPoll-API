@@ -10,6 +10,7 @@ describe(`${ID.name}`, () => {
 
       const vo = either.value as ID;
       expect(vo.value).toBe(validValue);
+      expect(vo.toString()).toBe(validValue.toString());
     });
 
     it('Deve retornar "Either Left" com o motivo da rejeição quando valor inserido for diferente de number', () => {
