@@ -22,6 +22,7 @@ module.exports = {
   collectCoverageFrom: ['**/*.(t|j)s'],
   coveragePathIgnorePatterns: [
     'main.ts',
+    'app.config.ts',
     '.d.ts',
     'typeorm-config.data-source.ts',
     'typeorm/entities',
