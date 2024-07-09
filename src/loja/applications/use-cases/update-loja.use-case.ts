@@ -14,7 +14,7 @@ import {
 } from '../../domain/repositories/loja.repository.interface';
 import { UpdateLojaDTO } from '../dtos/update-loja.dto';
 
-type InputProps = UpdateLojaDTO & {
+export type InputProps = UpdateLojaDTO & {
   id: number;
 };
 
