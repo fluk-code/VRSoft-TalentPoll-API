@@ -19,7 +19,7 @@ describe(LojaTypeOrmRepository.name, () => {
     repository = new LojaTypeOrmRepository(typeOrm);
   });
 
-  describe(LojaTypeOrmRepository.prototype.save, () => {
+  describe(LojaTypeOrmRepository.prototype.save.name, () => {
     it('Deve retornar LojaDTO quando a chamada for bem sucedida', async () => {
       const lojaStub = {
         id: 1,
@@ -36,6 +36,33 @@ describe(LojaTypeOrmRepository.name, () => {
       typeOrm.save.mockRejectedValueOnce(errorStub);
 
       const promiseOutput = repository.save({ descricao: 'Some description' });
+      expect(promiseOutput).rejects.toThrow(errorStub);
+    });
+  });
+
+  describe(LojaTypeOrmRepository.prototype.update.name, () => {
+    it('Deve retornar void quando a chamada for bem sucedida', async () => {
+      const lojaStub = {
+        toJSON: () => ({
+          id: 1,
+          descricao: 'New description',
+        }),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any;
+      typeOrm.save.mockResolvedValueOnce(lojaStub);
+
+      const output = await repository.update(lojaStub);
+      expect(output).toBeUndefined();
+    });
+
+    it('Deve falhar quando o typeOrm falhar', () => {
+      const errorStub = new Error('Some message error');
+      typeOrm.save.mockRejectedValueOnce(errorStub);
+
+      const promiseOutput = repository.update({
+        toJSON: () => ({ id: 1, descricao: 'Some description' }),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any);
       expect(promiseOutput).rejects.toThrow(errorStub);
     });
   });
