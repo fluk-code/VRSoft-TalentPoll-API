@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 
 import { Loja } from '../../domain/entities/loja.entity';
-import { ISavableLoja } from '../../domain/repositories/loja.repository';
+import { ISavableLoja } from '../../domain/repositories/loja.repository.interface';
 import { CreateLojaDTO } from '../dtos/create-loja.dto';
 import { CreateLojaUseCase } from './create-loja.use-case';
 

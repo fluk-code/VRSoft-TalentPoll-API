@@ -3,7 +3,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { LojaDTO } from '../../../../domain/dtos/loja.dto';
-import { ISavableLoja } from '../../../../domain/repositories/loja.repository';
+import { ISavableLoja } from '../../../../domain/repositories/loja.repository.interface';
 import LojaTypeOrm from '../entities/loja-typeorm.entity';
 
 export class LojaTypeOrmRepository implements ISavableLoja {

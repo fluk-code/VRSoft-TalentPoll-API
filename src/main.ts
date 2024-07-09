@@ -18,7 +18,7 @@ export async function bootstrap() {
     .use(compression())
     .useGlobalPipes(
       new ValidationPipe({
-        whitelist: true,
+        whitelist: false,
         transform: true,
       })
     );
