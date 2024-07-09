@@ -10,3 +10,27 @@ services:
     ports:
       - '9229:9229'
       - '${PORT}:${PORT}'
+    networks:
+      - vrsoft-talentpool-network
+
+  vrsoft-talentpool-postgres:
+    image: postgres:16.2
+    container_name: VRSoft-TalentPool-Postgres
+    hostname: vrsoft-talentpool-postgres
+    volumes:
+      - vrsoft-talentpool-postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${DB_DATABASE}
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - '${DB_PORT}:5432'
+    networks:
+      - vrsoft-talentpool-network
+
+networks:
+  vrsoft-talentpool-network:
+    driver: bridge
+
+volumes:
+  vrsoft-talentpool-postgres:
