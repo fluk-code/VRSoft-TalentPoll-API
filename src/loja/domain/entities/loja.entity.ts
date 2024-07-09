@@ -50,6 +50,13 @@ export class Loja {
     return this.#descricao;
   }
 
+  update(descricao: string): EitherOutput {
+    return Loja.factory({
+      ...this.toJSON(),
+      descricao,
+    });
+  }
+
   toJSON() {
     return {
       id: this.id.value,
