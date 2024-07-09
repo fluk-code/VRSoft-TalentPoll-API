@@ -12,8 +12,6 @@ export class Descricao {
   }
 
   static factory(value: string): EitherOutput {
-    console.log(maxLength(value, 60));
-
     const isValid = isString(value) && maxLength(value, 60);
 
     if (!isValid) {
@@ -25,5 +23,9 @@ export class Descricao {
 
   get value(): string {
     return this.#value;
+  }
+
+  toString(): string {
+    return this.value.toString();
   }
 }
