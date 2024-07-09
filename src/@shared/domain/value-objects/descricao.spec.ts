@@ -9,6 +9,7 @@ describe(`${Descricao.name}`, () => {
 
       const vo = either.value as Descricao;
       expect(vo.value).toBe(validValue);
+      expect(vo.toString()).toBe(validValue.toString());
     });
 
     it('Deve retornar "Either Left" com o motivo da rejeição quando valor inserido for diferente de string', () => {
