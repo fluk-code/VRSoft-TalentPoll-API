@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 import { IUseCase } from '@shared/application/use-case.interface';
 
 import { CreateLojaDTO } from '../applications/dtos/create-loja.dto';
@@ -9,6 +10,7 @@ describe(LojaController.name, () => {
   let controller: LojaController;
   let creteUseCase: jest.Mocked<IUseCase<CreateLojaDTO, Loja>>;
   let updateUseCase: jest.Mocked<IUseCase<InputProps, Loja>>;
+  let deleteUseCase: jest.Mocked<IUseCase<number, void>>;
 
   beforeEach(async () => {
     creteUseCase = {
@@ -19,7 +21,11 @@ describe(LojaController.name, () => {
       execute: jest.fn(),
     };
 
-    controller = new LojaController(creteUseCase, updateUseCase);
+    deleteUseCase = {
+      execute: jest.fn(),
+    };
+
+    controller = new LojaController(creteUseCase, updateUseCase, deleteUseCase);
   });
 
   describe(LojaController.prototype.create.name, () => {
@@ -68,6 +74,23 @@ describe(LojaController.name, () => {
         descricao: 'New descricao',
       });
 
+      expect(promiseOutput).rejects.toThrow(errorStub);
+    });
+  });
+
+  describe(LojaController.prototype.delete.name, () => {
+    it('Deve retornar LOJA quando a chamada for bem sucedida', async () => {
+      deleteUseCase.execute.mockResolvedValueOnce();
+
+      const output = await controller.delete(1);
+      expect(output).toBeUndefined();
+    });
+
+    it('Deve falhar quando o use case falhar', () => {
+      const errorStub = new Error('Some message error');
+      deleteUseCase.execute.mockRejectedValueOnce(errorStub);
+
+      const promiseOutput = controller.delete(1);
       expect(promiseOutput).rejects.toThrow(errorStub);
     });
   });

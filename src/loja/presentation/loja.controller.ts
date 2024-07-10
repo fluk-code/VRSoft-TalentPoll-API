@@ -1,10 +1,11 @@
-import { Body, Controller, Inject, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Inject, Param, Post, Put } from '@nestjs/common';
 
 import { IUseCase } from '@shared/application/use-case.interface';
 
 import { CreateLojaDTO } from '../applications/dtos/create-loja.dto';
 import { UpdateLojaDTO } from '../applications/dtos/update-loja.dto';
 import { CreateLojaUseCase } from '../applications/use-cases/create-loja.use-case';
+import { DeleteLojaUseCase } from '../applications/use-cases/delete-loja.use-case';
 import { InputProps, UpdateLojaUseCase } from '../applications/use-cases/update-loja.use-case';
 import { Loja } from '../domain/entities/loja.entity';
 
@@ -15,7 +16,10 @@ export class LojaController {
     private readonly createLojaUseCase: IUseCase<CreateLojaDTO, Loja>,
 
     @Inject(UpdateLojaUseCase)
-    private readonly updateLojaUseCase: IUseCase<InputProps, Loja>
+    private readonly updateLojaUseCase: IUseCase<InputProps, Loja>,
+
+    @Inject(DeleteLojaUseCase)
+    private readonly deleteLojaUseCase: IUseCase<number, void>
   ) {}
 
   @Post('/')
@@ -29,5 +33,10 @@ export class LojaController {
       id,
       ...body,
     });
+  }
+
+  @Delete('/:id')
+  async delete(@Param('id') id: number): Promise<void> {
+    return this.deleteLojaUseCase.execute(id);
   }
 }
