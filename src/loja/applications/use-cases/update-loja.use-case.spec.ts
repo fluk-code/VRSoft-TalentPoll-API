@@ -111,7 +111,7 @@ describe(UpdateLojaUseCase.name, () => {
     expect(promiseOutput).rejects.toThrow(InternalServerErrorException);
   });
 
-  it('Deve retornar a entidade Loja atualizad quando a chamada for bem sucedida', async () => {
+  it('Deve retornar a entidade Loja atualizado quando a chamada for bem sucedida', async () => {
     repository.findById.mockResolvedValue({
       id: 1,
       descricao: 'Some description',
