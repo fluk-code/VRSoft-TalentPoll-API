@@ -2,6 +2,7 @@
 
 import { CreateLojaUseCase } from './applications/use-cases/create-loja.use-case';
 import { DeleteLojaUseCase } from './applications/use-cases/delete-loja.use-case';
+import { FindLojaByIdUseCase } from './applications/use-cases/find-loja-by-id.use-case';
 import { UpdateLojaUseCase } from './applications/use-cases/update-loja.use-case';
 import {
   IDeletableLoja,
@@ -23,6 +24,12 @@ export namespace LOJA {
       provide: UpdateLojaUseCase,
       useFactory: (repository: IFindableLojaById & IUpdatableLoja) =>
         new UpdateLojaUseCase(repository),
+      inject: [LojaTypeOrmRepository],
+    };
+
+    export const FIND_LOJA_BY_ID_USE_CASE = {
+      provide: FindLojaByIdUseCase,
+      useFactory: (repository: IFindableLojaById) => new FindLojaByIdUseCase(repository),
       inject: [LojaTypeOrmRepository],
     };
 
