@@ -12,3 +12,7 @@ export interface IFindableLojaById {
 export interface IUpdatableLoja {
   update(loja: Loja): Promise<void>;
 }
+
+export interface IDeletableLoja {
+  delete(id: number): Promise<void>;
+}

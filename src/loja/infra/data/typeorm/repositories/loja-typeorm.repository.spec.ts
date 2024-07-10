@@ -14,6 +14,7 @@ describe(LojaTypeOrmRepository.name, () => {
       save: jest.fn(),
       find: jest.fn(),
       findOne: jest.fn(),
+      delete: jest.fn(),
     } as unknown as jest.Mocked<Repository<LojaTypeOrm>>;
 
     repository = new LojaTypeOrmRepository(typeOrm);
@@ -91,6 +92,21 @@ describe(LojaTypeOrmRepository.name, () => {
       typeOrm.findOne.mockRejectedValueOnce(errorStub);
 
       const promiseOutput = repository.findById(1);
+      expect(promiseOutput).rejects.toThrow(errorStub);
+    });
+  });
+
+  describe(LojaTypeOrmRepository.prototype.delete.name, () => {
+    it('Deve retornar void quando a chamada for bem sucedida', async () => {
+      const output = await repository.delete(1);
+      expect(output).toBeUndefined();
+    });
+
+    it('Deve falhar quando o typeOrm falhar', () => {
+      const errorStub = new Error('Some message error');
+      typeOrm.delete.mockRejectedValueOnce(errorStub);
+
+      const promiseOutput = repository.delete(1);
       expect(promiseOutput).rejects.toThrow(errorStub);
     });
   });

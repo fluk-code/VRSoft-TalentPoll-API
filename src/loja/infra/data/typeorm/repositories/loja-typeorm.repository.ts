@@ -5,13 +5,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { LojaDTO } from '../../../../domain/dtos/loja.dto';
 import { Loja } from '../../../../domain/entities/loja.entity';
 import {
+  IDeletableLoja,
   IFindableLojaById,
   ISavableLoja,
   IUpdatableLoja,
 } from '../../../../domain/repositories/loja.repository.interface';
 import LojaTypeOrm from '../entities/loja-typeorm.entity';
 
-export class LojaTypeOrmRepository implements ISavableLoja, IFindableLojaById, IUpdatableLoja {
+export class LojaTypeOrmRepository
+  implements ISavableLoja, IFindableLojaById, IUpdatableLoja, IDeletableLoja
+{
   constructor(
     @InjectRepository(LojaTypeOrm)
     private readonly typeOrm: Repository<LojaTypeOrm>
@@ -33,5 +36,9 @@ export class LojaTypeOrmRepository implements ISavableLoja, IFindableLojaById, I
         id,
       },
     });
+  }
+
+  async delete(id: number): Promise<void> {
+    await this.typeOrm.delete(id);
   }
 }
