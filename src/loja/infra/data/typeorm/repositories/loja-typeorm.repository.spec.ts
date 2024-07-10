@@ -1,12 +1,21 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 
+import { QueryBuilder } from '@shared/infra/typeorm/helpers/query.builder';
+
+import {
+  FilterLojaDTO,
+  SearchInputLojaDTO,
+  SortLojaDTO,
+} from '../../../../applications/dtos/search-loja.dto';
+import { LojaDTO } from '../../../../domain/dtos/loja.dto';
 import LojaTypeOrm from '../entities/loja-typeorm.entity';
 import { LojaTypeOrmRepository } from './loja-typeorm.repository';
 
 describe(LojaTypeOrmRepository.name, () => {
   let repository: LojaTypeOrmRepository;
   let typeOrm: jest.Mocked<Repository<LojaTypeOrm>>;
+  let queryBuilder: jest.Mocked<QueryBuilder<FilterLojaDTO, SortLojaDTO>>;
 
   beforeEach(() => {
     typeOrm = {
@@ -15,9 +24,17 @@ describe(LojaTypeOrmRepository.name, () => {
       find: jest.fn(),
       findOne: jest.fn(),
       delete: jest.fn(),
+      findAndCount: jest.fn(),
     } as unknown as jest.Mocked<Repository<LojaTypeOrm>>;
 
-    repository = new LojaTypeOrmRepository(typeOrm);
+    queryBuilder = {
+      addWhereCondition: jest.fn().mockReturnThis(),
+      addOrderCondition: jest.fn().mockReturnThis(),
+      andPaginate: jest.fn().mockReturnThis(),
+      build: jest.fn().mockReturnThis(),
+    } as unknown as jest.Mocked<QueryBuilder<FilterLojaDTO, SortLojaDTO>>;
+
+    repository = new LojaTypeOrmRepository(typeOrm, queryBuilder);
   });
 
   describe(LojaTypeOrmRepository.prototype.save.name, () => {
@@ -108,6 +125,112 @@ describe(LojaTypeOrmRepository.name, () => {
 
       const promiseOutput = repository.delete(1);
       expect(promiseOutput).rejects.toThrow(errorStub);
+    });
+  });
+
+  describe(LojaTypeOrmRepository.prototype.search.name, () => {
+    it('Deve retornar a lista de loja e quantidade de registo quando a chamada for bem sucedida', async () => {
+      const lojaFakeList = ['Some loja', 'Some loja 2'] as unknown as LojaDTO[];
+      const totalFake = 10;
+      typeOrm.findAndCount.mockResolvedValueOnce([lojaFakeList, totalFake]);
+      const searchInputDtoStub = new SearchInputLojaDTO();
+
+      const output = await repository.search(searchInputDtoStub);
+      expect(output.rows).toBe(lojaFakeList);
+      expect(output.total).toBe(totalFake);
+    });
+
+    it('Deve falhar quando o typeOrm falhar', () => {
+      const errorStub = new Error('Some message error');
+      typeOrm.findAndCount.mockRejectedValueOnce(errorStub);
+
+      const searchInputDtoStub = new SearchInputLojaDTO();
+
+      const promiseOutput = repository.search(searchInputDtoStub);
+      expect(promiseOutput).rejects.toThrow(errorStub);
+    });
+
+    it('Deve adicionar ILike quando filter.descricao for informado', async () => {
+      typeOrm.findAndCount.mockResolvedValueOnce([[], 10]);
+
+      const searchInputDtoStub = new SearchInputLojaDTO();
+      const filterFake = {
+        id: undefined,
+        descricao: 'some filter',
+      };
+      searchInputDtoStub.filter = JSON.stringify(filterFake);
+
+      await repository.search(searchInputDtoStub);
+      expect(queryBuilder.addWhereCondition).toHaveReturnedTimes(2);
+      expect(queryBuilder.addWhereCondition).toHaveBeenNthCalledWith(
+        2,
+        'descricao',
+        ILike(`%${filterFake.descricao}%`)
+      );
+    });
+
+    it('Deve adicionar passar o valor recebido quando filter.id for informado', async () => {
+      typeOrm.findAndCount.mockResolvedValueOnce([[], 10]);
+
+      const searchInputDtoStub = new SearchInputLojaDTO();
+      const filterFake = {
+        id: 1,
+        descricao: undefined,
+      };
+      searchInputDtoStub.filter = JSON.stringify(filterFake);
+
+      await repository.search(searchInputDtoStub);
+      expect(queryBuilder.addWhereCondition).toHaveReturnedTimes(2);
+      expect(queryBuilder.addWhereCondition).toHaveBeenNthCalledWith(1, 'id', filterFake.id);
+    });
+
+    it('Deve adicionar  passar o valor recebido quando sort.descricao for informado', async () => {
+      typeOrm.findAndCount.mockResolvedValueOnce([[], 10]);
+
+      const searchInputDtoStub = new SearchInputLojaDTO();
+      const sortFake = {
+        id: undefined,
+        descricao: 'ASC',
+      };
+      searchInputDtoStub.sort = JSON.stringify(sortFake);
+
+      await repository.search(searchInputDtoStub);
+      expect(queryBuilder.addOrderCondition).toHaveReturnedTimes(2);
+      expect(queryBuilder.addOrderCondition).toHaveBeenNthCalledWith(
+        2,
+        'descricao',
+        sortFake.descricao
+      );
+    });
+
+    it('Deve adicionar  passar o valor recebido quando filter.id for informado', async () => {
+      typeOrm.findAndCount.mockResolvedValueOnce([[], 10]);
+
+      const searchInputDtoStub = new SearchInputLojaDTO();
+      const sortFake = {
+        id: 'DESC',
+        descricao: undefined,
+      };
+      searchInputDtoStub.sort = JSON.stringify(sortFake);
+
+      await repository.search(searchInputDtoStub);
+      expect(queryBuilder.addOrderCondition).toHaveReturnedTimes(2);
+      expect(queryBuilder.addOrderCondition).toHaveBeenNthCalledWith(1, 'id', sortFake.id);
+    });
+
+    it('Deve adicionar passar perPage e perPage recebidos', async () => {
+      typeOrm.findAndCount.mockResolvedValueOnce([[], 10]);
+
+      const searchInputDtoStub = new SearchInputLojaDTO();
+      searchInputDtoStub.perPage = 10;
+      searchInputDtoStub.page = 2;
+
+      await repository.search(searchInputDtoStub);
+      expect(queryBuilder.andPaginate).toHaveReturnedTimes(1);
+      expect(queryBuilder.andPaginate).toHaveBeenCalledWith(
+        searchInputDtoStub.page,
+        searchInputDtoStub.perPage
+      );
     });
   });
 });
