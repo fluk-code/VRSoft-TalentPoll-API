@@ -11,7 +11,7 @@ import appSetup from '../utils/app-setup';
 
 let id: number;
 
-describe('[POST] /api/v1/lojas', () => {
+describe('[PUT] /api/v1/lojas/:id', () => {
   let app: INestApplication;
   let module: TestingModule;
   let dataSource: DataSource;
