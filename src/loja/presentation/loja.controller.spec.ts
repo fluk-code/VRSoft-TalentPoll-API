@@ -9,6 +9,7 @@ import { LojaController } from './loja.controller';
 describe(LojaController.name, () => {
   let controller: LojaController;
   let creteUseCase: jest.Mocked<IUseCase<CreateLojaDTO, Loja>>;
+  let findByIdUseCase: jest.Mocked<IUseCase<number, Loja>>;
   let updateUseCase: jest.Mocked<IUseCase<InputProps, Loja>>;
   let deleteUseCase: jest.Mocked<IUseCase<number, void>>;
 
@@ -25,7 +26,11 @@ describe(LojaController.name, () => {
       execute: jest.fn(),
     };
 
-    controller = new LojaController(creteUseCase, updateUseCase, deleteUseCase);
+    findByIdUseCase = {
+      execute: jest.fn(),
+    };
+
+    controller = new LojaController(creteUseCase, updateUseCase, deleteUseCase, findByIdUseCase);
   });
 
   describe(LojaController.prototype.create.name, () => {
@@ -91,6 +96,27 @@ describe(LojaController.name, () => {
       deleteUseCase.execute.mockRejectedValueOnce(errorStub);
 
       const promiseOutput = controller.delete(1);
+      expect(promiseOutput).rejects.toThrow(errorStub);
+    });
+  });
+
+  describe(LojaController.prototype.findByID.name, () => {
+    it('Deve retornar LOJA quando a chamada for bem sucedida', async () => {
+      findByIdUseCase.execute.mockResolvedValueOnce({
+        id: 1,
+        descicao: 'Some Descricao',
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any);
+
+      const output = await controller.findByID(1);
+      expect(output).toStrictEqual({ id: 1, descicao: 'Some Descricao' });
+    });
+
+    it('Deve falhar quando o use case falhar', () => {
+      const errorStub = new Error('Some message error');
+      findByIdUseCase.execute.mockRejectedValueOnce(errorStub);
+
+      const promiseOutput = controller.findByID(1);
       expect(promiseOutput).rejects.toThrow(errorStub);
     });
   });
