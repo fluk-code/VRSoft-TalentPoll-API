@@ -3,11 +3,13 @@
 import { CreateLojaUseCase } from './applications/use-cases/create-loja.use-case';
 import { DeleteLojaUseCase } from './applications/use-cases/delete-loja.use-case';
 import { FindLojaByIdUseCase } from './applications/use-cases/find-loja-by-id.use-case';
+import { SearchLojaUseCase } from './applications/use-cases/search-loja.use-case';
 import { UpdateLojaUseCase } from './applications/use-cases/update-loja.use-case';
 import {
   IDeletableLoja,
   IFindableLojaById,
   ISavableLoja,
+  ISearchableLoja,
   IUpdatableLoja,
 } from './domain/repositories/loja.repository.interface';
 import { LojaTypeOrmRepository } from './infra/data/typeorm/repositories/loja-typeorm.repository';
@@ -37,6 +39,12 @@ export namespace LOJA {
       provide: DeleteLojaUseCase,
       useFactory: (repository: IFindableLojaById & IDeletableLoja) =>
         new DeleteLojaUseCase(repository),
+      inject: [LojaTypeOrmRepository],
+    };
+
+    export const SEARCH_LOJA_USE_CASE = {
+      provide: SearchLojaUseCase,
+      useFactory: (repository: ISearchableLoja) => new SearchLojaUseCase(repository),
       inject: [LojaTypeOrmRepository],
     };
   }

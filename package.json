@@ -25,10 +25,6 @@
     "typeorm:run": "npm run typeorm migration:run -- -d src/@config/data/typeorm/typeorm-config.data-source.ts",
     "typeorm:revert": "npm run typeorm migration:revert -- -d src/@config/data/typeorm/typeorm-config.data-source.ts"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/vrsoftbr/NestJS-Template.git"
-  },
   "author": "Ferreira Felipe",
   "license": "UNLICENSED",
   "bugs": {

@@ -1,12 +1,15 @@
-import { Body, Controller, Delete, Get, Inject, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Param, Post, Put, Query } from '@nestjs/common';
 
+import { SearchOutputDTO } from '@shared/application/dtos/search-output.dto';
 import { IUseCase } from '@shared/application/use-case.interface';
 
 import { CreateLojaDTO } from '../applications/dtos/create-loja.dto';
+import { SearchInputLojaDTO } from '../applications/dtos/search-loja.dto';
 import { UpdateLojaDTO } from '../applications/dtos/update-loja.dto';
 import { CreateLojaUseCase } from '../applications/use-cases/create-loja.use-case';
 import { DeleteLojaUseCase } from '../applications/use-cases/delete-loja.use-case';
 import { FindLojaByIdUseCase } from '../applications/use-cases/find-loja-by-id.use-case';
+import { SearchLojaUseCase } from '../applications/use-cases/search-loja.use-case';
 import { InputProps, UpdateLojaUseCase } from '../applications/use-cases/update-loja.use-case';
 import { Loja } from '../domain/entities/loja.entity';
 
@@ -23,7 +26,10 @@ export class LojaController {
     private readonly deleteLojaUseCase: IUseCase<number, void>,
 
     @Inject(FindLojaByIdUseCase)
-    private readonly fndLojaByIDUseCase: IUseCase<number, Loja>
+    private readonly fndLojaByIDUseCase: IUseCase<number, Loja>,
+
+    @Inject(SearchLojaUseCase)
+    private readonly searchLojaUseCase: IUseCase<SearchInputLojaDTO, SearchOutputDTO<Loja>>
   ) {}
 
   @Post('/')
@@ -47,5 +53,10 @@ export class LojaController {
   @Delete('/:id')
   async delete(@Param('id') id: number): Promise<void> {
     return this.deleteLojaUseCase.execute(id);
+  }
+
+  @Get('/')
+  async search(@Query() queryParams: SearchInputLojaDTO): Promise<SearchOutputDTO<Loja>> {
+    return this.searchLojaUseCase.execute(queryParams);
   }
 }

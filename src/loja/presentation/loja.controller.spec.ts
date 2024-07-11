@@ -1,7 +1,9 @@
 /* eslint-disable sonarjs/no-duplicate-string */
+import { SearchOutputDTO } from '@shared/application/dtos/search-output.dto';
 import { IUseCase } from '@shared/application/use-case.interface';
 
 import { CreateLojaDTO } from '../applications/dtos/create-loja.dto';
+import { SearchInputLojaDTO } from '../applications/dtos/search-loja.dto';
 import { InputProps } from '../applications/use-cases/update-loja.use-case';
 import { Loja } from '../domain/entities/loja.entity';
 import { LojaController } from './loja.controller';
@@ -12,6 +14,7 @@ describe(LojaController.name, () => {
   let findByIdUseCase: jest.Mocked<IUseCase<number, Loja>>;
   let updateUseCase: jest.Mocked<IUseCase<InputProps, Loja>>;
   let deleteUseCase: jest.Mocked<IUseCase<number, void>>;
+  let searchUseCase: jest.Mocked<IUseCase<SearchInputLojaDTO, SearchOutputDTO<Loja>>>;
 
   beforeEach(async () => {
     creteUseCase = {
@@ -30,7 +33,17 @@ describe(LojaController.name, () => {
       execute: jest.fn(),
     };
 
-    controller = new LojaController(creteUseCase, updateUseCase, deleteUseCase, findByIdUseCase);
+    searchUseCase = {
+      execute: jest.fn(),
+    };
+
+    controller = new LojaController(
+      creteUseCase,
+      updateUseCase,
+      deleteUseCase,
+      findByIdUseCase,
+      searchUseCase
+    );
   });
 
   describe(LojaController.prototype.create.name, () => {
@@ -117,6 +130,32 @@ describe(LojaController.name, () => {
       findByIdUseCase.execute.mockRejectedValueOnce(errorStub);
 
       const promiseOutput = controller.findByID(1);
+      expect(promiseOutput).rejects.toThrow(errorStub);
+    });
+  });
+
+  describe(LojaController.prototype.search.name, () => {
+    it('Deve retornar SearchLojaOutputDTO quando a chamada for bem sucedida', async () => {
+      const searchInputFake = new SearchInputLojaDTO();
+      const searchOutputFake = {
+        data: [],
+        page: searchInputFake.page,
+        perPage: searchInputFake.perPage,
+        total: 10,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any;
+      searchUseCase.execute.mockResolvedValueOnce(searchOutputFake);
+
+      const output = await controller.search(searchInputFake);
+      expect(output).toStrictEqual(searchOutputFake);
+    });
+
+    it('Deve falhar quando o use case falhar', () => {
+      const errorStub = new Error('Some message error');
+      searchUseCase.execute.mockRejectedValueOnce(errorStub);
+
+      const searchInputFake = new SearchInputLojaDTO();
+      const promiseOutput = controller.search(searchInputFake);
       expect(promiseOutput).rejects.toThrow(errorStub);
     });
   });
