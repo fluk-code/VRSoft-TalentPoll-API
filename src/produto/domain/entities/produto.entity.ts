@@ -1,0 +1,90 @@
+import { Either, left, right } from '@shared/common/either/either';
+import { Descricao } from '@shared/domain/value-objects/descricao.vo';
+import { ID } from '@shared/domain/value-objects/id.vo';
+
+import { ProdutoDTO } from '../dtos/produto.dto';
+import { Imagem } from '../value-objects/imagem.vo';
+import { Moeda } from '../value-objects/moeda.vo';
+
+type Props = {
+  id: ID;
+  descricao: Descricao;
+  custo: Moeda;
+  imagem: Imagem;
+};
+
+type EitherOutput = Either<string[], Produto>;
+
+export class Produto {
+  #id: Readonly<ID>;
+  #descricao: Descricao;
+  #custo!: Moeda;
+  #imagem!: Imagem;
+
+  private constructor(props: Props) {
+    this.#id = Object.freeze(props.id);
+    this.#descricao = props.descricao;
+    this.#custo = props.custo;
+    this.#imagem = props.imagem;
+  }
+
+  static factory(props: ProdutoDTO): EitherOutput {
+    const attributeEitherList = {
+      id: ID.factory(props.id),
+      descricao: Descricao.factory(props.descricao),
+      custo: Moeda.factory(props.custo ?? '0.000'),
+      imagem: Imagem.factory(props.imagem ?? ''),
+    };
+
+    const propsErrorList = Object.values(attributeEitherList)
+      .filter((either) => either.isLeft())
+      .map((either) => either.value as string);
+
+    if (propsErrorList.length) {
+      return left(propsErrorList);
+    }
+
+    return right(
+      new Produto({
+        id: attributeEitherList.id.value as ID,
+        descricao: attributeEitherList.descricao.value as Descricao,
+        custo: attributeEitherList.custo.value as Moeda,
+        imagem: attributeEitherList.imagem.value as Imagem,
+      })
+    );
+  }
+
+  get id(): Readonly<ID> {
+    return this.#id;
+  }
+
+  get descicao(): Descricao {
+    return this.#descricao;
+  }
+
+  get custo(): Moeda {
+    return this.#custo;
+  }
+
+  get imagem(): Imagem {
+    return this.#imagem;
+  }
+
+  update(props: Omit<ProdutoDTO, 'id'>): EitherOutput {
+    return Produto.factory({
+      ...this.toJSON(),
+      descricao: props.descricao,
+      custo: props.custo,
+      imagem: props.imagem,
+    });
+  }
+
+  toJSON() {
+    return {
+      id: this.id.value,
+      descricao: this.descicao.value,
+      custo: this.custo.value,
+      imagem: this.imagem.value,
+    };
+  }
+}
