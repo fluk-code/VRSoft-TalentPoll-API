@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import typeormConfig from '@config/data/typeorm/typeorm-config';
 
 import { LojaModule } from './loja/loja.module';
+import { ProdutoModule } from './produto/produto.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { LojaModule } from './loja/loja.module';
     }),
     TypeOrmModule.forRoot(typeormConfig()),
     LojaModule,
+    ProdutoModule,
   ],
   controllers: [],
   providers: [Logger],

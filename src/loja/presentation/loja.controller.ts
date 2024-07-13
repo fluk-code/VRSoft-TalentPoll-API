@@ -57,6 +57,8 @@ export class LojaController {
 
   @Get('/')
   async search(@Query() queryParams: SearchInputLojaDTO): Promise<SearchOutputDTO<Loja>> {
+    console.log(queryParams.filter);
+
     return this.searchLojaUseCase.execute(queryParams);
   }
 }
