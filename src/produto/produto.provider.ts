@@ -1,4 +1,5 @@
 import { IFindableLojaById } from '../loja/domain/repositories/loja.repository.interface';
+import { AddPrecoProdutoUseCase } from './application/use-cases/add-preco-produto.use-case';
 import { CreateProdutoUseCase } from './application/use-cases/create-produto.use-case';
 import { DeleteProdutoUseCase } from './application/use-cases/delete-produto.use-case';
 import { FindProdutoByIdUseCase } from './application/use-cases/find-produto-by-id.use-case';
@@ -45,6 +46,13 @@ export namespace PRODUTO {
     export const SEARCH_PRODUTO_USE_CASE = {
       provide: SearchProdutoUseCase,
       useFactory: (repository: ISearchableProduto) => new SearchProdutoUseCase(repository),
+      inject: [ProdutoTypeOrmRepository],
+    };
+
+    export const ADD_PRECO_PRODUTO_USE_CASE = {
+      provide: AddPrecoProdutoUseCase,
+      useFactory: (repository: ISavableProduto & IFindableLojaById) =>
+        new AddPrecoProdutoUseCase(repository),
       inject: [ProdutoTypeOrmRepository],
     };
   }

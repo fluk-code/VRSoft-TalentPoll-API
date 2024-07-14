@@ -5,12 +5,14 @@ import { ID } from '@shared/domain/value-objects/id.vo';
 import { ProdutoDTO } from '../dtos/produto.dto';
 import { Imagem } from '../value-objects/imagem.vo';
 import { Moeda } from '../value-objects/moeda.vo';
+import { ProdutoLoja } from './produto-loja.entity';
 
 type Props = {
   id: ID;
   descricao: Descricao;
   custo: Moeda;
   imagem: Imagem;
+  precos: ProdutoLoja[];
 };
 
 type EitherOutput = Either<string[], Produto>;
@@ -18,14 +20,16 @@ type EitherOutput = Either<string[], Produto>;
 export class Produto {
   #id: Readonly<ID>;
   #descricao: Descricao;
-  #custo!: Moeda;
-  #imagem!: Imagem;
+  #custo: Moeda;
+  #imagem: Imagem;
+  #precos: ProdutoLoja[];
 
   private constructor(props: Props) {
     this.#id = Object.freeze(props.id);
     this.#descricao = props.descricao;
     this.#custo = props.custo;
     this.#imagem = props.imagem;
+    this.#precos = props.precos;
   }
 
   static factory(props: ProdutoDTO): EitherOutput {
@@ -34,9 +38,11 @@ export class Produto {
       descricao: Descricao.factory(props.descricao),
       custo: Moeda.factory(props.custo ?? '0.000'),
       imagem: Imagem.factory(props.imagem ?? ''),
+      precos: props.precos?.map((produtoLojaProps) => ProdutoLoja.factory(produtoLojaProps)) ?? [],
     };
 
     const propsErrorList = Object.values(attributeEitherList)
+      .flat()
       .filter((either) => either.isLeft())
       .map((either) => either.value as string);
 
@@ -50,6 +56,7 @@ export class Produto {
         descricao: attributeEitherList.descricao.value as Descricao,
         custo: attributeEitherList.custo.value as Moeda,
         imagem: attributeEitherList.imagem.value as Imagem,
+        precos: attributeEitherList.precos.map((either) => either.value as ProdutoLoja),
       })
     );
   }
@@ -70,6 +77,40 @@ export class Produto {
     return this.#imagem;
   }
 
+  get precos(): ProdutoLoja[] {
+    return this.#precos;
+  }
+
+  addPreco(idLoja: number, precoVenda: string): EitherOutput {
+    const produtoLojaEither = ProdutoLoja.factory({
+      idLoja,
+      idProduto: this.id.value,
+      precoVenda,
+    });
+
+    if (produtoLojaEither.isLeft()) {
+      return left(produtoLojaEither.value);
+    }
+
+    this.#precos.push(produtoLojaEither.value);
+
+    return right(this);
+  }
+
+  removePreco(idLoja: number): EitherOutput {
+    const idLojaEither = ID.factory(idLoja);
+
+    if (idLojaEither.isLeft()) {
+      return left([idLojaEither.value]);
+    }
+
+    const produtoLojaIndex = this.#precos.findIndex((entity) => entity.idLoja.value === idLoja);
+
+    produtoLojaIndex !== -1 && this.#precos.slice(produtoLojaIndex, 1);
+
+    return right(this);
+  }
+
   update(props: Omit<ProdutoDTO, 'id'>): EitherOutput {
     return Produto.factory({
       ...this.toJSON(),
@@ -85,6 +126,7 @@ export class Produto {
       descricao: this.descicao.value,
       custo: this.custo.value,
       imagem: this.imagem.value,
+      precos: this.precos.map((produtoLojaEntity) => produtoLojaEntity.toJSON()),
     };
   }
 }

@@ -47,6 +47,9 @@ export class ProdutoTypeOrmRepository
       where: {
         id,
       },
+      relations: {
+        precos: true,
+      },
     });
   }
 
@@ -70,7 +73,12 @@ export class ProdutoTypeOrmRepository
       .andPaginate(page, perPage)
       .build();
 
-    const [rows, total] = await this.typeOrm.findAndCount(query);
+    const [rows, total] = await this.typeOrm.findAndCount({
+      ...query,
+      relations: {
+        precos: false,
+      },
+    });
 
     return {
       rows,

@@ -23,8 +23,6 @@ export class FindProdutoByIdUseCase implements IUseCase<number, Produto> {
 
     const produtoEither = Produto.factory(produtoProps);
 
-    console.log(produtoProps, produtoEither.value);
-
     if (produtoEither.isLeft()) {
       throw new UnprocessableEntityException();
     }
