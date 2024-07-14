@@ -67,6 +67,7 @@ export class ProdutoTypeOrmRepository
       .addWhereCondition('id', filter.id)
       .addWhereCondition('descricao', filter.descricao && ILike(`%${filter.descricao}%`))
       .addWhereCondition('custo', filter.custo)
+      .andWhereRelationCondition('precos', 'precoVenda', filter.precos.precoVenda)
       .addOrderCondition('id', sort.id)
       .addOrderCondition('descricao', sort.descricao)
       .addOrderCondition('custo', sort.custo)
@@ -75,9 +76,6 @@ export class ProdutoTypeOrmRepository
 
     const [rows, total] = await this.typeOrm.findAndCount({
       ...query,
-      relations: {
-        precos: false,
-      },
     });
 
     return {

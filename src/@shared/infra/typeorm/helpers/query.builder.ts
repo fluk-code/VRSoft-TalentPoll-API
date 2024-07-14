@@ -20,6 +20,30 @@ export class QueryBuilder<FilterDTO, SortDTO> {
     return this;
   }
 
+  andWhereRelationCondition(
+    relation: keyof FilterDTO,
+    field: string,
+    condition: FindOperator<unknown> | unknown
+  ) {
+    if (condition) {
+      const where = this.#where as FilterDTO;
+      let relationCondition = {};
+      if (where[relation]) {
+        relationCondition = { ...where[relation], [field]: condition };
+      } else {
+        relationCondition = { [field]: condition };
+      }
+
+      this.#where = {
+        ...this.#where,
+        [relation]: {
+          ...relationCondition,
+        },
+      };
+    }
+    return this;
+  }
+
   addOrderCondition(field: keyof SortDTO, direction?: SortOptions) {
     if (direction) {
       this.#order = { ...this.#order, [field]: direction };

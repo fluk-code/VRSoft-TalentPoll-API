@@ -7,6 +7,7 @@ export type FilterProdutoDTO = {
   id?: number;
   descricao?: string;
   custo?: string;
+  precos: { precoVenda?: string };
 };
 
 export type SortProdutoDTO = {
@@ -20,6 +21,9 @@ export class SearchInputProdutoDTO extends SearchInputDTO<FilterProdutoDTO, Sort
     id: undefined,
     descricao: undefined,
     custo: undefined,
+    precos: {
+      precoVenda: undefined,
+    },
   };
 
   protected innerSort: SortProdutoDTO = {
@@ -32,17 +36,21 @@ export class SearchInputProdutoDTO extends SearchInputDTO<FilterProdutoDTO, Sort
 
   set filter(value: string) {
     try {
-      const { id, descricao, custo } = JSON.parse(value);
+      const { id, descricao, custo, precos } = JSON.parse(value);
       this.innerFilter = {
         id,
         descricao,
         custo,
+        precos,
       };
     } catch {
       this.innerFilter = {
         id: undefined,
         descricao: undefined,
         custo: undefined,
+        precos: {
+          precoVenda: undefined,
+        },
       };
     }
   }

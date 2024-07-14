@@ -13,8 +13,9 @@ export class SearchProdutoUseCase
   constructor(private readonly repository: ISearchableProduto) {}
 
   async execute(input: SearchInputProdutoDTO): Promise<SearchOutputDTO<ProdutoDTO>> {
-    const { rows: data, total } = await this.repository.search(input).catch(() => {
-      throw new InternalServerErrorException();
+    const { rows: data, total } = await this.repository.search(input).catch((error: Error) => {
+      console.error(error);
+      throw new InternalServerErrorException(error);
     });
 
     return new SearchProdutoOutputDTO({
