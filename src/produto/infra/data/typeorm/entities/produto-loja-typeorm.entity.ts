@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
+import LojaTypeOrm from '../../../../../loja/infra/data/typeorm/entities/loja-typeorm.entity';
 import { ProdutoLojaDTO } from '../../../../domain/dtos/produto.dto';
 import ProdutoTypeOrm from './produto-typeorm.entity';
 
@@ -17,4 +18,8 @@ export default class ProdutoLojaTypeOrm extends ProdutoLojaDTO {
   @ManyToOne(() => ProdutoTypeOrm, (produto) => produto.precos)
   @JoinColumn({ name: 'id_produto' })
   produto!: ProdutoTypeOrm;
+
+  @ManyToOne(() => LojaTypeOrm, (produto) => produto.precos)
+  @JoinColumn({ name: 'id_loja' })
+  loja!: ProdutoTypeOrm;
 }

@@ -3,6 +3,7 @@ import { AddPrecoProdutoUseCase } from './application/use-cases/add-preco-produt
 import { CreateProdutoUseCase } from './application/use-cases/create-produto.use-case';
 import { DeleteProdutoUseCase } from './application/use-cases/delete-produto.use-case';
 import { FindProdutoByIdUseCase } from './application/use-cases/find-produto-by-id.use-case';
+import { RemovePrecoProdutoUseCase } from './application/use-cases/remove-preco-produto.use-case';
 import { SearchProdutoUseCase } from './application/use-cases/search-produto.use-case';
 import { UpdateProdutoUseCase } from './application/use-cases/update-produto.use-case';
 import {
@@ -53,6 +54,13 @@ export namespace PRODUTO {
       provide: AddPrecoProdutoUseCase,
       useFactory: (repository: ISavableProduto & IFindableLojaById) =>
         new AddPrecoProdutoUseCase(repository),
+      inject: [ProdutoTypeOrmRepository],
+    };
+
+    export const REMOVE_PRECO_PRODUTO_USE_CASE = {
+      provide: RemovePrecoProdutoUseCase,
+      useFactory: (repository: ISavableProduto & IFindableLojaById) =>
+        new RemovePrecoProdutoUseCase(repository),
       inject: [ProdutoTypeOrmRepository],
     };
   }

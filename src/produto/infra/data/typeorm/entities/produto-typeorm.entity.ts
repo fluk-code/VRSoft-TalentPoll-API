@@ -18,7 +18,8 @@ export default class ProdutoTypeOrm extends ProdutoDTO {
   imagem?: string;
 
   @OneToMany(() => ProdutoLojaTypeOrm, (produtoLoja) => produtoLoja.produto, {
-    cascade: ['insert', 'remove'],
+    cascade: ['insert', 'update', 'remove'],
+    orphanedRowAction: 'delete',
   })
   precos!: ProdutoLojaDTO[];
 }

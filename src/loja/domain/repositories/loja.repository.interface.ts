@@ -10,6 +10,10 @@ export interface IFindableLojaById {
   findById(id: number): Promise<LojaDTO | null>;
 }
 
+export interface IFindableAllLojaById {
+  findAllById(): Promise<LojaDTO[]>;
+}
+
 export interface IUpdatableLoja {
   update(loja: Loja): Promise<void>;
 }

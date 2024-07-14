@@ -11,16 +11,16 @@ import {
   IFindableProdutoById,
   ISavableProduto,
 } from '../../domain/repositories/produto.repository.interface';
-import { AddPrecoProdutoDTO } from '../dtos/add-preco.dto';
 
-export type InputProps = AddPrecoProdutoDTO & {
+export type InputProps = {
   id: number;
+  idLoja: number;
 };
 
-export class AddPrecoProdutoUseCase implements IUseCase<InputProps, Produto> {
+export class RemovePrecoProdutoUseCase implements IUseCase<InputProps, Produto> {
   constructor(private readonly repository: IFindableProdutoById & ISavableProduto) {}
 
-  async execute({ id, idLoja, precoVenda }: InputProps): Promise<Produto> {
+  async execute({ id, idLoja }: InputProps): Promise<Produto> {
     const produtoProps = await this.repository.findById(id).catch(() => {
       throw new InternalServerErrorException();
     });
@@ -36,7 +36,7 @@ export class AddPrecoProdutoUseCase implements IUseCase<InputProps, Produto> {
     }
 
     const produtoEntity = produtoEither.value;
-    const updatedEither = produtoEntity.addPreco(Number(idLoja), precoVenda);
+    const updatedEither = produtoEntity.removePreco(Number(idLoja));
 
     if (updatedEither.isLeft()) {
       throw new UnprocessableEntityException();
@@ -44,8 +44,6 @@ export class AddPrecoProdutoUseCase implements IUseCase<InputProps, Produto> {
 
     const produtoUpdatedEntity = updatedEither.value;
     await this.repository.save(produtoUpdatedEntity.toJSON()).catch((error: Error) => {
-      console.error(error);
-
       throw new InternalServerErrorException(error);
     });
 

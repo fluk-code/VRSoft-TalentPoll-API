@@ -14,6 +14,7 @@ import { LojaDTO } from '../../../../domain/dtos/loja.dto';
 import { Loja } from '../../../../domain/entities/loja.entity';
 import {
   IDeletableLoja,
+  IFindableAllLojaById,
   IFindableLojaById,
   ISavableLoja,
   ISearchableLoja,
@@ -23,7 +24,13 @@ import LojaTypeOrm from '../entities/loja-typeorm.entity';
 import { LojaQueryBuilder } from '../helpers/loja-query.builder';
 
 export class LojaTypeOrmRepository
-  implements ISavableLoja, IFindableLojaById, IUpdatableLoja, IDeletableLoja, ISearchableLoja
+  implements
+    ISavableLoja,
+    IFindableLojaById,
+    IUpdatableLoja,
+    IDeletableLoja,
+    ISearchableLoja,
+    IFindableAllLojaById
 {
   constructor(
     @InjectRepository(LojaTypeOrm)
@@ -49,6 +56,10 @@ export class LojaTypeOrmRepository
         id,
       },
     });
+  }
+
+  async findAllById(): Promise<LojaDTO[]> {
+    return this.typeOrm.find();
   }
 
   async delete(id: number): Promise<void> {

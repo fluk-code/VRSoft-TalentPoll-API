@@ -11,7 +11,7 @@ export class CreateTableProdutoLoja1720914404774 implements MigrationInterface {
           {
             name: 'id_produto',
             type: 'int',
-            isNullable: false,
+            isNullable: true,
           },
           {
             name: 'id_loja',
@@ -22,12 +22,6 @@ export class CreateTableProdutoLoja1720914404774 implements MigrationInterface {
             name: 'preco_venda',
             type: 'numeric(13, 3)',
             isNullable: true,
-          },
-        ],
-        uniques: [
-          {
-            name: 'UQ_idProduto_idLoja',
-            columnNames: ['id_produto', 'id_loja'],
           },
         ],
         foreignKeys: [

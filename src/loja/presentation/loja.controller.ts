@@ -8,9 +8,11 @@ import { SearchInputLojaDTO } from '../applications/dtos/search-loja.dto';
 import { UpdateLojaDTO } from '../applications/dtos/update-loja.dto';
 import { CreateLojaUseCase } from '../applications/use-cases/create-loja.use-case';
 import { DeleteLojaUseCase } from '../applications/use-cases/delete-loja.use-case';
+import { FindAllLojaByIdUseCase } from '../applications/use-cases/find-all-loja-by-id.use-case';
 import { FindLojaByIdUseCase } from '../applications/use-cases/find-loja-by-id.use-case';
 import { SearchLojaUseCase } from '../applications/use-cases/search-loja.use-case';
 import { InputProps, UpdateLojaUseCase } from '../applications/use-cases/update-loja.use-case';
+import { LojaDTO } from '../domain/dtos/loja.dto';
 import { Loja } from '../domain/entities/loja.entity';
 
 @Controller('lojas')
@@ -29,7 +31,10 @@ export class LojaController {
     private readonly fndLojaByIDUseCase: IUseCase<number, Loja>,
 
     @Inject(SearchLojaUseCase)
-    private readonly searchLojaUseCase: IUseCase<SearchInputLojaDTO, SearchOutputDTO<Loja>>
+    private readonly searchLojaUseCase: IUseCase<SearchInputLojaDTO, SearchOutputDTO<Loja>>,
+
+    @Inject(FindAllLojaByIdUseCase)
+    private readonly findAllLojaByIdUseCase: IUseCase<void, LojaDTO[]>
   ) {}
 
   @Post('/')
@@ -56,7 +61,14 @@ export class LojaController {
   }
 
   @Get('/')
-  async search(@Query() queryParams: SearchInputLojaDTO): Promise<SearchOutputDTO<Loja>> {
+  async search(
+    @Query() queryParams: SearchInputLojaDTO,
+    @Query('type') type: string
+  ): Promise<SearchOutputDTO<Loja> | LojaDTO[]> {
+    if (type === 'all') {
+      return this.findAllLojaByIdUseCase.execute();
+    }
+
     return this.searchLojaUseCase.execute(queryParams);
   }
 }

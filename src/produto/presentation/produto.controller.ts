@@ -25,6 +25,10 @@ import {
 import { CreateProdutoUseCase } from '../application/use-cases/create-produto.use-case';
 import { DeleteProdutoUseCase } from '../application/use-cases/delete-produto.use-case';
 import { FindProdutoByIdUseCase } from '../application/use-cases/find-produto-by-id.use-case';
+import {
+  InputProps as InputRemovePrecoProduto,
+  RemovePrecoProdutoUseCase,
+} from '../application/use-cases/remove-preco-produto.use-case';
 import { SearchProdutoUseCase } from '../application/use-cases/search-produto.use-case';
 import {
   InputProps as InputUpdateProduto,
@@ -51,7 +55,10 @@ export class ProdutoController {
     private readonly searchUseCase: IUseCase<SearchInputProdutoDTO, SearchOutputDTO<Produto>>,
 
     @Inject(AddPrecoProdutoUseCase)
-    private readonly addPrecoUseCase: IUseCase<InputAddPrecoProduto, Produto>
+    private readonly addPrecoUseCase: IUseCase<InputAddPrecoProduto, Produto>,
+
+    @Inject(RemovePrecoProdutoUseCase)
+    private readonly removePrecoUseCase: IUseCase<InputRemovePrecoProduto, Produto>
   ) {}
 
   @Post('/')
@@ -72,11 +79,19 @@ export class ProdutoController {
     });
   }
 
-  @Patch('/:id/preco')
+  @Patch('/:id/add-preco')
   async addPreco(@Param('id') id: number, @Body() body: AddPrecoProdutoDTO): Promise<Produto> {
     return this.addPrecoUseCase.execute({
       id,
       ...body,
+    });
+  }
+
+  @Patch('/:id/remove-preco')
+  async removePreco(@Param('id') id: number, @Body('idLoja') idLoja: number): Promise<Produto> {
+    return this.removePrecoUseCase.execute({
+      id,
+      idLoja,
     });
   }
 

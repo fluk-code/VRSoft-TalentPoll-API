@@ -92,6 +92,8 @@ export class Produto {
       return left(produtoLojaEither.value);
     }
 
+    const produtoLojaIndex = this.#precos.findIndex((entity) => entity.idLoja.value === idLoja);
+    produtoLojaIndex !== -1 && this.#precos.splice(produtoLojaIndex, 1);
     this.#precos.push(produtoLojaEither.value);
 
     return right(this);
@@ -105,8 +107,7 @@ export class Produto {
     }
 
     const produtoLojaIndex = this.#precos.findIndex((entity) => entity.idLoja.value === idLoja);
-
-    produtoLojaIndex !== -1 && this.#precos.slice(produtoLojaIndex, 1);
+    produtoLojaIndex !== -1 && this.#precos.splice(produtoLojaIndex, 1);
 
     return right(this);
   }
