@@ -17,6 +17,7 @@ export class QueryBuilder<FilterDTO, SortDTO> {
     if (condition) {
       this.#where = { ...this.#where, [field]: condition };
     }
+    console.log(this.#where);
     return this;
   }
 
@@ -41,6 +42,7 @@ export class QueryBuilder<FilterDTO, SortDTO> {
         },
       };
     }
+
     return this;
   }
 

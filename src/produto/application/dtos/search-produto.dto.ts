@@ -7,7 +7,7 @@ export type FilterProdutoDTO = {
   id?: number;
   descricao?: string;
   custo?: string;
-  precos: { precoVenda?: string };
+  precos?: { precoVenda?: string };
 };
 
 export type SortProdutoDTO = {
