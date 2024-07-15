@@ -5,6 +5,7 @@ import { IUseCase } from '@shared/application/use-case.interface';
 import { CreateLojaDTO } from '../applications/dtos/create-loja.dto';
 import { SearchInputLojaDTO } from '../applications/dtos/search-loja.dto';
 import { InputProps } from '../applications/use-cases/update-loja.use-case';
+import { LojaDTO } from '../domain/dtos/loja.dto';
 import { Loja } from '../domain/entities/loja.entity';
 import { LojaController } from './loja.controller';
 
@@ -15,6 +16,7 @@ describe(LojaController.name, () => {
   let updateUseCase: jest.Mocked<IUseCase<InputProps, Loja>>;
   let deleteUseCase: jest.Mocked<IUseCase<number, void>>;
   let searchUseCase: jest.Mocked<IUseCase<SearchInputLojaDTO, SearchOutputDTO<Loja>>>;
+  let findAllLojasUseCase: jest.Mocked<IUseCase<void, LojaDTO[]>>;
 
   beforeEach(async () => {
     creteUseCase = {
@@ -37,12 +39,17 @@ describe(LojaController.name, () => {
       execute: jest.fn(),
     };
 
+    findAllLojasUseCase = {
+      execute: jest.fn(),
+    };
+
     controller = new LojaController(
       creteUseCase,
       updateUseCase,
       deleteUseCase,
       findByIdUseCase,
-      searchUseCase
+      searchUseCase,
+      findAllLojasUseCase
     );
   });
 
@@ -146,7 +153,7 @@ describe(LojaController.name, () => {
       } as any;
       searchUseCase.execute.mockResolvedValueOnce(searchOutputFake);
 
-      const output = await controller.search(searchInputFake);
+      const output = await controller.search(searchInputFake, '');
       expect(output).toStrictEqual(searchOutputFake);
     });
 
@@ -155,7 +162,23 @@ describe(LojaController.name, () => {
       searchUseCase.execute.mockRejectedValueOnce(errorStub);
 
       const searchInputFake = new SearchInputLojaDTO();
-      const promiseOutput = controller.search(searchInputFake);
+      const promiseOutput = controller.search(searchInputFake, '');
+      expect(promiseOutput).rejects.toThrow(errorStub);
+    });
+
+    it('Deve retornar LojaDTO[] quando a chamada for bem sucedida', async () => {
+      const fakeLojaDTO = [{ id: 1, descricao: 'some description' }];
+      findAllLojasUseCase.execute.mockResolvedValueOnce(fakeLojaDTO);
+
+      const output = await controller.search(new SearchInputLojaDTO(), 'all');
+      expect(output).toStrictEqual(fakeLojaDTO);
+    });
+
+    it('Deve falhar quando o use case falhar', () => {
+      const errorStub = new Error('Some message error');
+      findAllLojasUseCase.execute.mockRejectedValueOnce(errorStub);
+
+      const promiseOutput = controller.search(new SearchInputLojaDTO(), 'all');
       expect(promiseOutput).rejects.toThrow(errorStub);
     });
   });

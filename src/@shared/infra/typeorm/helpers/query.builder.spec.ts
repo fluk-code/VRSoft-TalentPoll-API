@@ -2,7 +2,10 @@ import { SortOptions } from '@shared/application/dtos/search-input.dto';
 
 import { QueryBuilder } from './query.builder';
 
-class QueryBuilderStub extends QueryBuilder<{ attr: string }, { attr: SortOptions }> {}
+class QueryBuilderStub extends QueryBuilder<
+  { attr: string; relation: { attr: string } },
+  { attr: SortOptions }
+> {}
 
 describe(QueryBuilder.name, () => {
   it('Deve adicionar ao where quando metodo addWhyereCondition for chamado', () => {
@@ -30,5 +33,24 @@ describe(QueryBuilder.name, () => {
 
     expect(query.take).toStrictEqual(fakePerPage);
     expect(query.skip).toStrictEqual(110);
+  });
+
+  it('Deve adiciona where em tabelas relacionadas quando andWhereRelationCondition for chamado', () => {
+    let query = new QueryBuilderStub()
+      .andWhereRelationCondition('relation', 'attr', 'value')
+      .build();
+
+    expect(query.where).toStrictEqual({
+      relation: { attr: 'value' },
+    });
+
+    query = new QueryBuilderStub()
+      .andWhereRelationCondition('relation', 'attr', 'value')
+      .andWhereRelationCondition('relation', 'attr', 'new value')
+      .build();
+
+    expect(query.where).toStrictEqual({
+      relation: { attr: 'new value' },
+    });
   });
 });

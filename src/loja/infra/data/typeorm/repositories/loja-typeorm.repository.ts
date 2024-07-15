@@ -14,7 +14,7 @@ import { LojaDTO } from '../../../../domain/dtos/loja.dto';
 import { Loja } from '../../../../domain/entities/loja.entity';
 import {
   IDeletableLoja,
-  IFindableAllLojaById,
+  IFindableAll,
   IFindableLojaById,
   ISavableLoja,
   ISearchableLoja,
@@ -30,7 +30,7 @@ export class LojaTypeOrmRepository
     IUpdatableLoja,
     IDeletableLoja,
     ISearchableLoja,
-    IFindableAllLojaById
+    IFindableAll
 {
   constructor(
     @InjectRepository(LojaTypeOrm)
@@ -58,7 +58,7 @@ export class LojaTypeOrmRepository
     });
   }
 
-  async findAllById(): Promise<LojaDTO[]> {
+  async findAll(): Promise<LojaDTO[]> {
     return this.typeOrm.find();
   }
 

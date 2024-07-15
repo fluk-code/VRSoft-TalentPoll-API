@@ -3,13 +3,13 @@ import { InternalServerErrorException } from '@nestjs/common';
 import { IUseCase } from '@shared/application/use-case.interface';
 
 import { LojaDTO } from '../../domain/dtos/loja.dto';
-import { IFindableAllLojaById } from '../../domain/repositories/loja.repository.interface';
+import { IFindableAll } from '../../domain/repositories/loja.repository.interface';
 
-export class FindAllLojaByIdUseCase implements IUseCase<void, LojaDTO[]> {
-  constructor(private readonly repository: IFindableAllLojaById) {}
+export class FindAllLojaUseCase implements IUseCase<void, LojaDTO[]> {
+  constructor(private readonly repository: IFindableAll) {}
 
   async execute(): Promise<LojaDTO[]> {
-    return this.repository.findAllById().catch(() => {
+    return this.repository.findAll().catch(() => {
       throw new InternalServerErrorException();
     });
   }

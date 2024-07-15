@@ -8,7 +8,6 @@ import {
   SearchInputLojaDTO,
   SortLojaDTO,
 } from '../../../../applications/dtos/search-loja.dto';
-import { LojaDTO } from '../../../../domain/dtos/loja.dto';
 import LojaTypeOrm from '../entities/loja-typeorm.entity';
 import { LojaTypeOrmRepository } from './loja-typeorm.repository';
 
@@ -42,7 +41,8 @@ describe(LojaTypeOrmRepository.name, () => {
       const lojaStub = {
         id: 1,
         descricao: 'Some description',
-      };
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any;
       typeOrm.save.mockResolvedValueOnce(lojaStub);
 
       const output = await repository.save({ descricao: 'Some description' });
@@ -90,7 +90,8 @@ describe(LojaTypeOrmRepository.name, () => {
       const lojaStub = {
         id: 1,
         descricao: 'Some description',
-      };
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any;
       typeOrm.findOne.mockResolvedValueOnce(lojaStub);
 
       const output = await repository.findById(1);
@@ -128,9 +129,34 @@ describe(LojaTypeOrmRepository.name, () => {
     });
   });
 
+  describe(LojaTypeOrmRepository.prototype.findAll.name, () => {
+    it('Deve retornar lista de LojaDTO quando a chamada for bem sucedida', async () => {
+      const lojaListStub = [
+        {
+          id: 1,
+          descricao: 'Some description',
+        },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ] as any;
+      typeOrm.find.mockResolvedValueOnce(lojaListStub);
+
+      const output = await repository.findAll();
+      expect(output).toStrictEqual(lojaListStub);
+    });
+
+    it('Deve falhar quando o typeOrm falhar', () => {
+      const errorStub = new Error('Some message error');
+      typeOrm.find.mockRejectedValueOnce(errorStub);
+
+      const promiseOutput = repository.findAll();
+      expect(promiseOutput).rejects.toThrow(errorStub);
+    });
+  });
+
   describe(LojaTypeOrmRepository.prototype.search.name, () => {
     it('Deve retornar a lista de loja e quantidade de registo quando a chamada for bem sucedida', async () => {
-      const lojaFakeList = ['Some loja', 'Some loja 2'] as unknown as LojaDTO[];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const lojaFakeList = ['Some loja', 'Some loja 2'] as any;
       const totalFake = 10;
       typeOrm.findAndCount.mockResolvedValueOnce([lojaFakeList, totalFake]);
       const searchInputDtoStub = new SearchInputLojaDTO();

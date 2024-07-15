@@ -8,7 +8,7 @@ import { SearchInputLojaDTO } from '../applications/dtos/search-loja.dto';
 import { UpdateLojaDTO } from '../applications/dtos/update-loja.dto';
 import { CreateLojaUseCase } from '../applications/use-cases/create-loja.use-case';
 import { DeleteLojaUseCase } from '../applications/use-cases/delete-loja.use-case';
-import { FindAllLojaByIdUseCase } from '../applications/use-cases/find-all-loja-by-id.use-case';
+import { FindAllLojaUseCase } from '../applications/use-cases/find-all-loja.use-case';
 import { FindLojaByIdUseCase } from '../applications/use-cases/find-loja-by-id.use-case';
 import { SearchLojaUseCase } from '../applications/use-cases/search-loja.use-case';
 import { InputProps, UpdateLojaUseCase } from '../applications/use-cases/update-loja.use-case';
@@ -33,8 +33,8 @@ export class LojaController {
     @Inject(SearchLojaUseCase)
     private readonly searchLojaUseCase: IUseCase<SearchInputLojaDTO, SearchOutputDTO<Loja>>,
 
-    @Inject(FindAllLojaByIdUseCase)
-    private readonly findAllLojaByIdUseCase: IUseCase<void, LojaDTO[]>
+    @Inject(FindAllLojaUseCase)
+    private readonly findAllLojaUseCase: IUseCase<void, LojaDTO[]>
   ) {}
 
   @Post('/')
@@ -66,7 +66,7 @@ export class LojaController {
     @Query('type') type: string
   ): Promise<SearchOutputDTO<Loja> | LojaDTO[]> {
     if (type === 'all') {
-      return this.findAllLojaByIdUseCase.execute();
+      return this.findAllLojaUseCase.execute();
     }
 
     return this.searchLojaUseCase.execute(queryParams);
