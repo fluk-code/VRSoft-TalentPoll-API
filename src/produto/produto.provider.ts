@@ -52,14 +52,14 @@ export namespace PRODUTO {
 
     export const ADD_PRECO_PRODUTO_USE_CASE = {
       provide: AddPrecoProdutoUseCase,
-      useFactory: (repository: ISavableProduto & IFindableLojaById) =>
+      useFactory: (repository: IUpdatableProduto & IFindableLojaById) =>
         new AddPrecoProdutoUseCase(repository),
       inject: [ProdutoTypeOrmRepository],
     };
 
     export const REMOVE_PRECO_PRODUTO_USE_CASE = {
       provide: RemovePrecoProdutoUseCase,
-      useFactory: (repository: ISavableProduto & IFindableLojaById) =>
+      useFactory: (repository: IUpdatableProduto & IFindableLojaById) =>
         new RemovePrecoProdutoUseCase(repository),
       inject: [ProdutoTypeOrmRepository],
     };

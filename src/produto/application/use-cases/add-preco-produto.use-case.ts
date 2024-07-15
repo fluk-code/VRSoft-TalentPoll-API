@@ -9,7 +9,7 @@ import { IUseCase } from '@shared/application/use-case.interface';
 import { Produto } from '../../domain/entities/produto.entity';
 import {
   IFindableProdutoById,
-  ISavableProduto,
+  IUpdatableProduto,
 } from '../../domain/repositories/produto.repository.interface';
 import { AddPrecoProdutoDTO } from '../dtos/add-preco.dto';
 
@@ -18,7 +18,7 @@ export type InputProps = AddPrecoProdutoDTO & {
 };
 
 export class AddPrecoProdutoUseCase implements IUseCase<InputProps, Produto> {
-  constructor(private readonly repository: IFindableProdutoById & ISavableProduto) {}
+  constructor(private readonly repository: IFindableProdutoById & IUpdatableProduto) {}
 
   async execute({ id, idLoja, precoVenda }: InputProps): Promise<Produto> {
     const produtoProps = await this.repository.findById(id).catch(() => {
@@ -43,7 +43,7 @@ export class AddPrecoProdutoUseCase implements IUseCase<InputProps, Produto> {
     }
 
     const produtoUpdatedEntity = updatedEither.value;
-    await this.repository.save(produtoUpdatedEntity.toJSON()).catch((error: Error) => {
+    await this.repository.update(produtoUpdatedEntity).catch((error: Error) => {
       console.error(error);
 
       throw new InternalServerErrorException(error);

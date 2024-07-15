@@ -11,12 +11,14 @@ import {
   Query,
 } from '@nestjs/common';
 
-import { SearchOutputDTO } from '@shared/application/dtos/search-output.dto';
 import { IUseCase } from '@shared/application/use-case.interface';
 
 import { AddPrecoProdutoDTO } from '../application/dtos/add-preco.dto';
 import { CreateProdutoDTO } from '../application/dtos/create-produto.dto';
-import { SearchInputProdutoDTO } from '../application/dtos/search-produto.dto';
+import {
+  SearchInputProdutoDTO,
+  SearchProdutoOutputDTO,
+} from '../application/dtos/search-produto.dto';
 import { UpdateProdutoDTO } from '../application/dtos/update-produto.dto';
 import {
   AddPrecoProdutoUseCase,
@@ -52,7 +54,7 @@ export class ProdutoController {
     private readonly deleteUseCase: IUseCase<number, void>,
 
     @Inject(SearchProdutoUseCase)
-    private readonly searchUseCase: IUseCase<SearchInputProdutoDTO, SearchOutputDTO<Produto>>,
+    private readonly searchUseCase: IUseCase<SearchInputProdutoDTO, SearchProdutoOutputDTO>,
 
     @Inject(AddPrecoProdutoUseCase)
     private readonly addPrecoUseCase: IUseCase<InputAddPrecoProduto, Produto>,
@@ -101,7 +103,7 @@ export class ProdutoController {
   }
 
   @Get('/')
-  async search(@Query() queryParams: SearchInputProdutoDTO): Promise<SearchOutputDTO<Produto>> {
+  async search(@Query() queryParams: SearchInputProdutoDTO): Promise<SearchProdutoOutputDTO> {
     return this.searchUseCase.execute(queryParams);
   }
 }

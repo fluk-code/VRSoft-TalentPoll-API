@@ -4,7 +4,7 @@ import { IFindableAll } from '../../domain/repositories/loja.repository.interfac
 import { FindAllLojaUseCase } from './find-all-loja.use-case';
 
 describe(FindAllLojaUseCase.name, () => {
-  let usgeCase: FindAllLojaUseCase;
+  let useCase: FindAllLojaUseCase;
   let repository: jest.Mocked<IFindableAll>;
 
   beforeEach(() => {

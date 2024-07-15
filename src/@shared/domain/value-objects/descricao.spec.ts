@@ -1,7 +1,7 @@
 import { Descricao } from './descricao.vo';
 
-describe(`${Descricao.name}`, () => {
-  describe(`${Descricao.factory.name}`, () => {
+describe(Descricao.name, () => {
+  describe(Descricao.factory.name, () => {
     it('Deve retornar um "Either Right" com a Descricao quando o valor inserido for valido', () => {
       const validValue = 'Qualquer valor valido';
       const either = Descricao.factory(validValue);
