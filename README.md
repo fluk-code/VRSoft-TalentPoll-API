@@ -1,32 +1,67 @@
 # VRSoft-TalentPool-API
 
-### ⚠️ Check List
-> Ao iniciar um novo repositório com o template é necessário realizar os passos abaixo para configurar o projeto.
+## Start
 
-> Atenção pois em alguns lugares usamos padrão com CamelCase e em outro deve ser a string toda em lowercase.
+Estre projet utiliza **Dev Container**, para iniciar o ambiente de desenvolvimento será necessário a extensão `ms-vscode-remote.remote-containers`.
 
-1.  Alterações para `CamelCase` nos arquivos:
-    - [README.md](README.md#L1-L3). _Linha 1, Coluna 3_ 
-    - [README.md](README.md#L23-L83). _Linha 23, Coluna 83_ 
-    - [package-json](package.json#L2-L5). _Linha 2, Coluna 5_
-    - [package-lock.json](package-lock.json#L2-L12). _Linha 2, Coluna 12_
-    - [package-lock.json](package-lock.json#L8-L16). _Linha 8, Coluna 16_
-    - [sonar-project.properties](sonar-project.properties#L6-L21) _Linha 1, Coluna 18_
-    - [sonar-project.properties](sonar-project.properties#L2-L19) _Linha 2, Coluna 19_
-    - [docker-compose.yml](docker-compose.yml#L6-L5) _Linha 6, Coluna 5_
-    - [.vscode/launch.json](.vscode/launch.json#L5) _Linha5, Coluna 22_
+    1. Abra o VsCode.
+    2. Indo em `File (Arquivo)` > `Open Folder (Abrir Pasta)`.
+    3. Clique no botão `Reopen in Container` que aparecerá no canto inferior direito do VS Code.
 
-2.  Alterações para `lowercase` nos arquivos:
-    - [docker-compose.yml](.devcontainer/docker-compose.yml#L4-L2). _Linha 4, Coluna 2_ 
-    - [devcontainer.json](.devcontainer/devcontainer.json#L16-L15). _Linha 16, Coluna 15_ 
-    - [docker-compose.yml](docker-compose.yml#L4-L3). _Linha 4, Coluna 3_ 
-    - [docker-compose.override.yml](docker-compose.override.yml#L4-L3). _Linha 4, Coluna 3_  
+    Ou
 
-3. Iniciar a WIKI do repositório.
-3. Renomear a pasta [.github/workflows_init](.github/workflows_init/CHECK_PULL_REQUEST.yml) para `workflows`.
-4. Excluir essas mensagens de `⚠️ CHECK LIST`  do README.md e alterar o título.
+    1. Abra o projeto no VsCode.
+    2. Tecle `CTRL` + `SHIFT` + `P`.
+    3. Procure e escolha a opção `Dev Containers: Open Folder in Container`.
 
-## 📖 Documentação
-> Este projeto segue o [padrão de projeto](https://github.com/vrsoftbr/NestJS-Template/wiki) definidos pela squad Mobile.
+Isso iniciará o Dev Container e configurará o ambiente de desenvolvimento.
 
-> Notas de versões podem ser consultadas na [WIKI - Notas de versão](https://github.com/vrsoftbr/VRSoft-TalentPool-API/wiki/Notas-de-vers%C3%A3o).
+Com o `Dev Container` iniciado basta executar o ambiente que preferir
+
+```
+  npm start
+```
+
+```
+  npm run start:debug
+```
+
+```
+  npm run start:dev
+```
+
+### Check List
+
+> ✅ Desenvolver uma Aplicação Web utilizando o framework Angular com TypeScript;
+
+> ✅ Desenvolver uma API que atenda à essa aplicação utilizando Node.js também com
+> Typescript, e um ORM (Object Relational Mapper) utilizando o banco de dados
+> PostgreSQL;
+
+> ✅ Desenvolver os testes unitários de ao menos um service com cobertura mínima
+> de 80% no frontend e/ou backend;
+
+> ✅ Subir os códigos fontes para uma ferramenta de versionamento (GitLab, GitHub,
+> BitBucket) em um repositório público;
+
+> ✅ Seguir as regras de negócio, wireframes e diagramas abaixo:
+
+#### Diferenciais
+
+> ✅ Utilizar o framework NestJS no back-end;
+
+> ✅ Utilizar o TypeORM;
+
+> ✅ Criar o ambiente de desenvolvimento utilizando containers em Docker;
+
+> ✅ Criar as migrations que criarão o banco de dados e toda a estrutura de tabelas necessárias para o startup da aplicação;
+
+> ✅ Desenvolver testes de integração (E2E) para ao menos uma rota no back-end
+
+> ✅ Desenvolver testes unitários que cubram ao menos 70% do back-end;
+
+> ✅ Desenvolver testes no frontend que cubram ao menos 50% da aplicação;
+
+> ✅ Desenvolver a paginação onde houver tabela e o volume de dados for extenso;
+
+> ✅ Desenvolver a ordenação das colunas nas tabelas de dados.
