@@ -2,10 +2,11 @@ import compression from 'compression';
 import { json, urlencoded } from 'express';
 import helmet from 'helmet';
 
-import { Logger, ValidationPipe } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 
+import appGlobalConfigs from './app.config';
 import { AppModule } from './app.module';
 
 export async function bootstrap() {
@@ -15,13 +16,10 @@ export async function bootstrap() {
     .use(json({ limit: '50mb' }))
     .use(urlencoded({ extended: true, limit: '50mb' }))
     .use(helmet())
-    .use(compression())
-    .useGlobalPipes(
-      new ValidationPipe({
-        whitelist: true,
-        transform: true,
-      })
-    );
+    .use(compression());
+
+  await appGlobalConfigs(app);
+
   app.enableCors();
 
   const configService = app.get(ConfigService);

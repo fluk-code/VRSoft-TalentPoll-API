@@ -1,13 +1,21 @@
 import { Logger, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
-const isDevEnv = process.env.NODE_ENV === 'dev' || process.env.NODE_ENV === 'developement';
+import typeormConfig from '@config/data/typeorm/typeorm-config';
+
+import { LojaModule } from './loja/loja.module';
+import { ProdutoModule } from './produto/produto.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: isDevEnv ? '.env.dev' : `.env`,
+      envFilePath: '.env',
     }),
+    TypeOrmModule.forRoot(typeormConfig()),
+    LojaModule,
+    ProdutoModule,
   ],
   controllers: [],
   providers: [Logger],
